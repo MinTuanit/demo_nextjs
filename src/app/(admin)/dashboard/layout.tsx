@@ -5,27 +5,27 @@ import AdminSideBar from '@/components/layout/admin.sidebar';
 import { AdminContextProvider } from '@/library/admin.context';
 
 const AdminLayout = ({
-    children,
+	children,
 }: Readonly<{
-    children: React.ReactNode;
+	children: React.ReactNode;
 }>) => {
 
-    return (
-        <AdminContextProvider>
-            <div style={{ display: "flex" }}>
-                <div className='left-side' style={{ minWidth: 80 }}>
-                    <AdminSideBar />
-                </div>
-                <div className='right-side' style={{ flex: 1 }}>
-                    <AdminHeader />
-                    <AdminContent>
-                        {children}
-                    </AdminContent>
-                    <AdminFooter />
-                </div>
-            </div>
-        </AdminContextProvider>
-    )
+	return (
+		<AdminContextProvider>
+			<div style={{ display: "flex" }}>
+				<div className='left-side' style={{ minWidth: 80 }}>
+					<AdminSideBar />
+				</div>
+				<div className='right-side' style={{ flex: 1 }}>
+					<AdminHeader />
+					<AdminContent>
+						{children}
+					</AdminContent>
+					<AdminFooter />
+				</div>
+			</div>
+		</AdminContextProvider>
+	)
 }
 
 export default AdminLayout

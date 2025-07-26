@@ -16,12 +16,15 @@
     "@ant-design/nextjs-registry": "1.0.2",
     "antd": "5.26.4",
     "next": "15.3.5",
+    "next-auth": "5.0.0-beta.20",
+    "query-string": "9.2.2",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@eslint/eslintrc": "3",
     "@types/node": "24.0.13",
+    "@types/query-string": "6.2.0",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.0",
     "eslint": "8.57.0",
