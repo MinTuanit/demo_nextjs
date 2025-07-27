@@ -1,22 +1,32 @@
 'use client'
-import { Button, Col, Divider, Form, Input, notification, Row } from 'antd';
+import React from 'react';
+import { Button, Col, Divider, Form, Input, message, Row } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { authenticate } from '@/utils/actions';
+import { sendRequest } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 
-const Login = () => {
-  const router = useRouter();
+const Verify = (props: any) => {
+  const { id } = props;
+  const route = useRouter();
+
   const onFinish = async (values: any) => {
-    const { username, password } = values;
-    const res = await authenticate(username, password);
-    if (res?.error) {
-      alert("Eror: " + res.error);
-      if (res.code === 2) {
-        router.push("/verify");
-      }
+    const { _id, code } = values;
+    const res = await sendRequest<IBackendRes<any>>({
+      method: "POST",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/check-code`,
+      body: {
+        _id,
+        code,
+      },
+    });
+    console.log(res);
+    if (res?.data) {
+      alert("Active successfully");
+      route.push(`/auth/login`);
     } else {
-      router.push("/dashboard");
+      alert("Active failed: " + res?.message);
+      console.error(res);
     }
   };
 
@@ -29,7 +39,7 @@ const Login = () => {
           border: "1px solid #ccc",
           borderRadius: "5px"
         }}>
-          <legend>Đăng Nhập</legend>
+          <legend>Kích hoạt Tài Khoản</legend>
           <Form
             name="basic"
             onFinish={onFinish}
@@ -37,21 +47,19 @@ const Login = () => {
             layout='vertical'
           >
             <Form.Item
-              label="Email"
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your email!',
-                },
-              ]}
+              label="Id"
+              name="_id"
+              initialValue={id}
+              hidden
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
-
+            <div>
+              A code has been sent to your email. Please enter the code to activate your account.
+            </div>
             <Form.Item
-              label="Password"
-              name="password"
+              label="Code"
+              name="code"
               rules={[
                 {
                   required: true,
@@ -65,19 +73,21 @@ const Login = () => {
             <Form.Item
             >
               <Button type="primary" htmlType="submit">
-                Login
+                Submit
               </Button>
             </Form.Item>
           </Form>
           <Link href={"/"}><ArrowLeftOutlined /> Quay lại trang chủ</Link>
           <Divider />
           <div style={{ textAlign: "center" }}>
-            Chưa có tài khoản? <Link href={"/auth/register"}>Đăng ký tại đây</Link>
+            Đã có tài khoản? <Link href={"/auth/login"}>Đăng nhập</Link>
           </div>
+
         </fieldset>
       </Col>
     </Row>
+
   )
 }
 
-export default Login;
+export default Verify;

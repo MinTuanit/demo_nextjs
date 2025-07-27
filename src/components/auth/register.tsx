@@ -3,11 +3,28 @@ import React from 'react';
 import { Button, Col, Divider, Form, Input, Row } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { sendRequest } from '@/utils/api';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
-
-  const onFinish = async (/*values: any*/) => {
-
+  const route = useRouter();
+  const onFinish = async (values: any) => {
+    const { email, password, name } = values;
+    const res = await sendRequest<IBackendRes<any>>({
+      method: "POST",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
+      body: {
+        email,
+        password,
+        name,
+      },
+    });
+    if (res?.data) {
+      route.push(`/verify/${res?.data?._id}`);
+    } else {
+      alert("Registration failed: " + res?.message);
+      console.error(res);
+    }
   };
 
   return (
