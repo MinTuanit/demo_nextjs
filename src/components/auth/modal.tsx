@@ -8,6 +8,7 @@ import { sendRequest } from '@/utils/api';
 const ModalReactive = (props: any) => {
   const { isModalOpen, setIsModalOpen, userEmail } = props;
   const [current, setCurrent] = useState(0);
+  const [userId, setUserId] = useState('');
   const [form] = Form.useForm();
   const hashMouted = useHasMounted();
 
@@ -42,13 +43,33 @@ const ModalReactive = (props: any) => {
       }
     });
     if (res?.data) {
+      setUserId(res?.data?._id)
       setCurrent(1);
-      message.success("Đã gửi mã kích hoạt đến email của bạn");
     } else {
-      message.error("Gửi mã kích hoạt thất bại: " + res?.message);
+      message.error("Faield in sending code: " + res?.message);
       console.error(res);
     }
   }
+
+  const onFinishStep1 = async (values: any) => {
+    const { _id, code } = values;
+    const res = await sendRequest<IBackendRes<any>>({
+      method: "POST",
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/check-code`,
+      body: {
+        _id: userId,
+        code: code,
+      },
+    });
+    console.log(res);
+    if (res?.data) {
+      alert("Active successfully");
+      setCurrent(2);
+    } else {
+      alert("Active failed: " + res?.message);
+      console.error(res);
+    }
+  };
 
   return (
     <>
@@ -76,7 +97,7 @@ const ModalReactive = (props: any) => {
             },
             {
               title: 'Done',
-              status: 'wait',
+              // status: 'wait',
               icon: <SmileOutlined />,
             },
           ]}
@@ -84,7 +105,7 @@ const ModalReactive = (props: any) => {
         <div style={{ marginTop: 24 }}>
           {current === 0 && (
             <>
-              <div style={{ margin: '20px 0' }}>Tài khoản bạn chưa được kích hoạt</div>
+              <div style={{ margin: '20px 0' }}>Your account has not been activated</div>
               <Form
                 name="verify"
                 autoComplete="off"
@@ -115,6 +136,7 @@ const ModalReactive = (props: any) => {
               // onFinish={onFinish}
               autoComplete="off"
               layout='vertical'
+              onFinish={onFinishStep1}
             >
               <Form.Item
                 label="Id"
@@ -148,7 +170,7 @@ const ModalReactive = (props: any) => {
             </Form>
           )}
           {current === 2 && (
-            <div>2</div>
+            <div>Your account has been successfully activated. Please log in again!</div>
           )}
         </div>
       </Modal>

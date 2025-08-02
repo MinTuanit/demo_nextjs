@@ -39,7 +39,7 @@ const Verify = (props: any) => {
           border: "1px solid #ccc",
           borderRadius: "5px"
         }}>
-          <legend>Kích hoạt Tài Khoản</legend>
+          <legend>Activate Account</legend>
           <Form
             name="basic"
             onFinish={onFinish}
@@ -77,10 +77,10 @@ const Verify = (props: any) => {
               </Button>
             </Form.Item>
           </Form>
-          <Link href={"/"}><ArrowLeftOutlined /> Quay lại trang chủ</Link>
+          <Link href={"/"}><ArrowLeftOutlined /> Back to Homepage</Link>
           <Divider />
           <div style={{ textAlign: "center" }}>
-            Đã có tài khoản? <Link href={"/auth/login"}>Đăng nhập</Link>
+            Already have an account? <Link href={"/auth/login"}>Login</Link>
           </div>
 
         </fieldset>
